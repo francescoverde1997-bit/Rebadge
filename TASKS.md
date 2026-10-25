@@ -177,17 +177,17 @@ Legenda: [x] fatto e testato · [ ] da fare · (!) richiede decisione del fondat
 - [x] Chiusura del mese non riuscita: il PDF già caricato viene rimosso dal server (nessun file orfano)
 - [x] Test: 2 unit test (rete/servizio), fase e2e 12 con 4 controlli (intestazioni, 404, webhook fuori ordine, doppio abbonamento)
 
-## Fase 7i — Fondamenta (Fase A) ✅ (tranne git)
+## Fase 7i — Fondamenta (Fase A) ✅
 - [x] Copia di sicurezza prima delle modifiche: `~/Desktop/rebadge-copia-2026-10-25-prima-fase-A.zip`
 - [x] `npm run test:db` funziona su Mac e Linux senza installare nulla: Postgres 17 incluso (embedded-postgres) o PGBIN/Postgres di sistema; `\set` e `\echo` di psql emulati
 - [x] `npm run e2e` portabile: ripiego su perl se manca `timeout`, si ferma con un messaggio se le porte 3100/54400/54500 sono occupate
+- [x] Corretto: dopo un salvataggio, il pannello delle correzioni non si richiude più da solo se riaperto subito (e2e instabile in fase 4)
 - [x] Test del PDF senza pdftotext (fase 7g); vitest 3 → 5, tipi Node 20 → 22: `npm audit` senza vulnerabilità (anche negli strumenti di sviluppo)
 - [x] `.env.example` (incluso nel repository), README vero, nome "ReBadge" nel prodotto Stripe e nella guida di assistenza
 - [x] Intestazione pubblica su telefoni stretti (320–379 px): solo il simbolo, "Prova gratis" resta nello schermo; controllo e2e in fase 12
-- [ ] git e primo commit: in attesa degli strumenti Apple
+- [x] git attivo: primo commit `35b2790` del 25/10 (ramo main)
 
 ## Fase 8 — Lancio
-- [ ] git: attivare il repository e fare il primo commit (servono gli strumenti per sviluppatori di Apple: `xcode-select --install`)
 - [ ] Tipi TypeScript generati dal database (`supabase gen types`): da fare sul progetto Supabase reale, in fase D (qui manca Docker)
 - [ ] Privacy policy e termini
 - [ ] Collegamento al progetto Supabase reale + deploy su Vercel (richiede approvazione)
