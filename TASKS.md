@@ -188,7 +188,9 @@ Legenda: [x] fatto e testato · [ ] da fare · (!) richiede decisione del fondat
 - [x] git attivo: primo commit `35b2790` del 25/10 (ramo main)
 
 ## Fase 8 — Lancio
-Piano dettagliato, costi e ordine dei passi: [docs/FASE_D.md](docs/FASE_D.md) (da approvare).
+Piano dettagliato, costi e ordine dei passi: [docs/FASE_D.md](docs/FASE_D.md) (approvato il 25/10).
+- [x] D1 GitHub: repository privato `francescoverde1997-bit/Rebadge`, ramo main caricato; accesso dal Mac con chiave dedicata al solo repository (deploy key, `~/.ssh/rebadge_github`, alias `github-rebadge`)
+- [ ] D2 Supabase gratuito nella regione UE (Francoforte)
 - [ ] Tipi TypeScript generati dal database (`supabase gen types`): da fare sul progetto Supabase reale, in fase D (qui manca Docker)
 - [ ] Privacy policy e termini
 - [ ] Collegamento al progetto Supabase reale + deploy su Vercel (richiede approvazione)
