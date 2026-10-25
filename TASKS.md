@@ -194,6 +194,7 @@ Piano dettagliato, costi e ordine dei passi: [docs/FASE_D.md](docs/FASE_D.md) (a
       11 tabelle tutte con RLS, accesso configurato (password ≥ 8, conferma email obbligatoria); tutti i test di sicurezza passano sul database reale (in transazioni annullate)
 - [x] Scoperto sul Supabase reale: permessi predefiniti troppo ampi (TRUNCATE ai ruoli del browser) → migrazione 13 + test 95_grants
 - [x] D3 Tipi TypeScript generati dal database reale (`npm run db:types`, controllo `db:types:check`) e collegati ai 3 client Supabase; 5 punti corretti (parametri facoltativi delle funzioni, regole ore come JSON)
-- [ ] D4 Vercel (regione Dublino) · D5 Stripe test · D6 dominio · D7 email Resend + testi in italiano · D8 monitoraggio · D9 legale · D10 lancio
+- [x] D4 Vercel: https://rebadge.vercel.app online, server a Dublino (dub1), 4 variabili corrette (service_role come Secret), Supabase collegato all'indirizzo
+- [ ] Plugin/MCP Vercel per Claude Code: non installati (comando `claude` non disponibile sul Mac) · D5 Stripe test · D6 dominio · D7 email Resend + testi in italiano · D8 monitoraggio · D9 legale · D10 lancio
 - [ ] Privacy policy e termini
 - [ ] Collegamento al progetto Supabase reale + deploy su Vercel (richiede approvazione)
