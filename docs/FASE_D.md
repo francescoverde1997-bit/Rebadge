@@ -1,6 +1,6 @@
 # Fase D — Andare online (piano)
 
-Stato: **approvato il 25/10**. D1 e D2 completati, nessun costo sostenuto.
+Stato: **approvato il 25/10**. D1, D2 e D3 completati, nessun costo sostenuto.
 Regola: ogni passo con un costo, una pubblicazione o un account a nome del fondatore parte solo con il suo OK esplicito.
 Gli account li crea il fondatore (a suo nome, con la sua carta); Claude guida, configura e verifica, senza mai vedere password o carte.
 
@@ -15,7 +15,7 @@ Gli account li crea il fondatore (a suo nome, con la sua carta); Claude guida, c
 |---|---|---|---|---|
 | D1 ✅ | **GitHub**: repository privato del progetto | tu crei l'account / il repository, io collego e carico (`git push`) | gratis | copia remota del codice; serve a Vercel per pubblicare a ogni modifica |
 | D2 ✅ | **Supabase (prova)**: progetto `vhyjffmgvmsldfrfbbvf` nella regione **UE – Irlanda (eu-west-1)**, scelta il 25/10 al posto di Francoforte | tu crei l'organizzazione e il progetto; io applico le 12 migrazioni, configuro accesso, link delle email e testi in italiano | gratis (Free) | database reale in Europa; si avvera "Dati in Europa" della homepage |
-| D3 | **Verifiche sul database reale** | io | gratis | test di sicurezza (RLS) e flusso completo su Supabase vero: registrazione con email di conferma, tablet, report, chiusura del mese; **tipi TypeScript generati dal database** (rimasti dalla fase B) |
+| D3 ✅ | **Verifiche sul database reale** | io | gratis | test di sicurezza (RLS) e flusso completo su Supabase vero: registrazione con email di conferma, tablet, report, chiusura del mese; **tipi TypeScript generati dal database** (rimasti dalla fase B) |
 | D4 | **Vercel (prova)**: pubblicazione su un indirizzo provvisorio `…vercel.app`, funzioni nella regione **Dublino (dub1)**, vicino al database | tu crei l'account e colleghi GitHub; io imposto le variabili da `.env.example` | gratis (Hobby, uso non commerciale: va bene per le prove) | l'app raggiungibile da qualsiasi tablet e telefono |
 | D5 | **Stripe (test)**: prodotto "ReBadge", prezzi Base e Plus, webhook verso l'indirizzo di prova | tu crei l'account Stripe (resta in modalità test); io configuro e provo con la carta 4242 | gratis | abbonamento, cambio piano, disdetta e sospensione verificati con lo Stripe vero |
 | D6 | **Dominio** (es. `rebadge.it`, da verificare) + **marchio** | tu: verifica disponibilità e marchio (TMview/UIBM), acquisto; io: collegamento a Vercel | **circa 10–20 €/anno** | indirizzo definitivo e certificato HTTPS automatico |

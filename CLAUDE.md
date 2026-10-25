@@ -19,13 +19,14 @@ report mensile per il consulente del lavoro, abbonamento mensile. **Priorità: s
 | `npm run test:db` | Postgres 17 temporaneo (incluso: embedded-postgres) + migrazioni + test RLS/tablet, anche su Mac |
 | `npm run e2e` | build + finto Supabase in memoria + test Playwright dell'interfaccia (screenshot in `e2e-shots/`) |
 | `npm run typecheck` / `npm run lint` / `npm run build` | controlli |
+| `npm run db:types` / `npm run db:types:check` | rigenera / controlla i tipi TypeScript dal database Supabase reale (serve il token in `~/.rebadge/`) |
 
 ## Struttura
 ```
 supabase/migrations/   schema SQL (unica fonte di verità del DB)
 supabase/tests/        00_supabase_stub.sql emula Supabase, 1x_*.sql test con ASSERT
 src/lib/hours/         motore di calcolo ore e festività (funzioni pure, testate)
-src/lib/supabase/      client browser e server
+src/lib/supabase/      client browser, server e servizio (tipizzati); database.types.ts GENERATO, correzioni in types.ts
 scripts/test-db.mjs    runner dei test DB (Postgres incluso o PGBIN; \set/\echo di psql emulati)
 scripts/e2e/           finto Supabase (solo per e2e, NON emula la RLS) + scenari Playwright
 scripts/pdf-text.mjs   testo dei PDF per i test (pdftotext se c'è, altrimenti pdfjs)
@@ -60,7 +61,7 @@ src/lib/validation.ts  schemi zod condivisi e traduzione errori Auth
 4. **PIN**: bcrypt in `employee_secrets`, tabella senza policy né grant. Blocco 5 min dopo 5 errori.
 5. **Calcolo ore** solo in `src/lib/hours/calculate.ts`: non duplicare logica in SQL o nella UI.
 6. Il client non può cambiare `plan_status`/`trial_ends_at` (grant a colonne).
-7. Ogni modifica al DB = nuova migrazione + test in `supabase/tests`. Ogni modifica al calcolo = test.
+7. Ogni modifica al DB = nuova migrazione + test in `supabase/tests`; poi `node scripts/supabase-remote.mjs migrate <ref>` e `npm run db:types`. Ogni modifica al calcolo = test.
 
 8. **Solo il titolare modifica le ore**: il dipendente timbra (sempre all'ora del server) e legge le proprie ore, nient'altro. Coperto dai test DB.
 9. I form che salvano impostazioni usano `submitWithoutReset` (no reset automatico di React 19).

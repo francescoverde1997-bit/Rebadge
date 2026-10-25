@@ -2,6 +2,7 @@
 
 import { requireOwner } from "@/lib/company";
 import { createAdminClient } from "@/lib/supabase/admin";
+import type { Json } from "@/lib/supabase/types";
 import { createClient } from "@/lib/supabase/server";
 import { currentMonth, parseMonth } from "@/lib/hours/month";
 import { buildReportPdf } from "@/lib/report-pdf";
@@ -44,7 +45,8 @@ export async function closeMonth(_: CloseState, form: FormData): Promise<CloseSt
 
   const totals = Object.fromEntries(report.employees.map((e) => [e.name, { ...e.totals, ...e.leave }]));
   const { error } = await supabase.rpc("close_month", {
-    p_company_id: company.id, p_month: month, p_settings: settings, p_totals: totals, p_pdf_path: path,
+    // regole ore congelate come JSON (HoursSettings è un oggetto di soli valori semplici)
+    p_company_id: company.id, p_month: month, p_settings: settings as unknown as Json, p_totals: totals, p_pdf_path: path,
   });
   if (error) {
     // il PDF appena caricato non appartiene a nessuna chiusura: lo toglie il server (il bucket non consente

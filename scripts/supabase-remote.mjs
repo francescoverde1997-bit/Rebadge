@@ -2,11 +2,13 @@
 // mai nel progetto). Uso:
 //   node scripts/supabase-remote.mjs migrate <ref>        applica le migrazioni non ancora applicate, in ordine
 //   node scripts/supabase-remote.mjs sql <ref> "<query>"  esegue una query (solo per controlli)
+//   node scripts/supabase-remote.mjs types <ref> [--check] rigenera src/lib/supabase/database.types.ts dal database reale
+//                                                         (--check: non scrive, esce con errore se i tipi non sono aggiornati)
 //   node scripts/supabase-remote.mjs auth <ref> <url>     indirizzo del sito, link consentiti, password, testi email
 //                                                         (da docs/email-templates.md): si rilancia a ogni nuovo indirizzo
 // Le migrazioni applicate si registrano in supabase_migrations.schema_migrations (come la CLI di Supabase),
 // così non vengono mai applicate due volte.
-import { readdirSync, readFileSync } from "node:fs";
+import { readdirSync, readFileSync, writeFileSync } from "node:fs";
 import { homedir } from "node:os";
 import { join } from "node:path";
 import { fileURLToPath } from "node:url";
@@ -14,7 +16,7 @@ import { fileURLToPath } from "node:url";
 const ROOT = fileURLToPath(new URL("..", import.meta.url));
 const TOKEN = readFileSync(join(homedir(), ".rebadge", "supabase_token"), "utf8").trim();
 const [cmd, ref, arg] = process.argv.slice(2);
-if (!cmd || !/^[a-z]{20}$/.test(ref ?? "")) { console.error("uso: node scripts/supabase-remote.mjs <migrate|sql|auth> <ref> [query|url]"); process.exit(2); }
+if (!cmd || !/^[a-z]{20}$/.test(ref ?? "")) { console.error("uso: node scripts/supabase-remote.mjs <migrate|sql|types|auth> <ref> [query|url|--check]"); process.exit(2); }
 
 async function sql(query) {
   const r = await fetch(`https://api.supabase.com/v1/projects/${ref}/database/query`, {
@@ -43,6 +45,18 @@ if (cmd === "sql") {
     console.log(`✓ ${f}`);
   }
   console.log("migrazioni aggiornate");
+} else if (cmd === "types") {
+  const r = await fetch(`https://api.supabase.com/v1/projects/${ref}/types/typescript?included_schemas=public`, { headers: { Authorization: `Bearer ${TOKEN}` } });
+  if (!r.ok) throw new Error(`${r.status}: ${(await r.text()).slice(0, 300)}`);
+  const { types } = await r.json();
+  const file = join(ROOT, "src/lib/supabase/database.types.ts");
+  if (arg === "--check") {
+    if (readFileSync(file, "utf8") !== types) { console.error("✗ i tipi non corrispondono al database reale: npm run db:types"); process.exit(1); }
+    console.log("✓ tipi allineati al database reale");
+  } else {
+    writeFileSync(file, types);
+    console.log(`✓ ${file.slice(ROOT.length)} rigenerato (${types.split("\n").length} righe)`);
+  }
 } else if (cmd === "auth") {
   const site = (arg ?? "").replace(/\/$/, "");
   if (!/^https?:\/\/[^/]+$/.test(site)) { console.error("serve l'indirizzo del sito, es. https://rebadge.vercel.app"); process.exit(2); }
