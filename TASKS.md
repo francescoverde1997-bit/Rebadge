@@ -188,6 +188,7 @@ Legenda: [x] fatto e testato · [ ] da fare · (!) richiede decisione del fondat
 - [x] git attivo: primo commit `35b2790` del 25/10 (ramo main)
 
 ## Fase 8 — Lancio
+Piano dettagliato, costi e ordine dei passi: [docs/FASE_D.md](docs/FASE_D.md) (da approvare).
 - [ ] Tipi TypeScript generati dal database (`supabase gen types`): da fare sul progetto Supabase reale, in fase D (qui manca Docker)
 - [ ] Privacy policy e termini
 - [ ] Collegamento al progetto Supabase reale + deploy su Vercel (richiede approvazione)
