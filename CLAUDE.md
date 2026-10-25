@@ -29,6 +29,8 @@ src/lib/supabase/      client browser e server
 scripts/test-db.mjs    runner dei test DB (Postgres incluso o PGBIN; \set/\echo di psql emulati)
 scripts/e2e/           finto Supabase (solo per e2e, NON emula la RLS) + scenari Playwright
 scripts/pdf-text.mjs   testo dei PDF per i test (pdftotext se c'è, altrimenti pdfjs)
+scripts/supabase-remote.mjs  Supabase reale: migrate / auth / sql (token in ~/.rebadge/supabase_token, mai nel progetto)
+scripts/test-db-remote.mjs   test di sicurezza sul Supabase reale, in transazioni annullate
 src/app/(auth)/        registrati, accedi, password-dimenticata, reimposta-password + server actions
 src/app/auth/          rotte dei link email (confirm con token_hash, callback con code)
 src/app/app/           area riservata; nav.tsx: menu in alto (computer) e barra in basso (smartphone)

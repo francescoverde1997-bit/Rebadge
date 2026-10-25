@@ -21,8 +21,17 @@ In **SQL Editor** esegui, in quest'ordine, il contenuto dei file:
 10. `supabase/migrations/20261022000010_billing.sql`
 11. `supabase/migrations/20261022000011_plans_custom.sql`
 12. `supabase/migrations/20261022000012_sick_protocol.sql`
+13. `supabase/migrations/20261025000013_harden_grants.sql`
 
 In alternativa, con la Supabase CLI: `supabase link --project-ref <ref>` e poi `supabase db push`.
+
+**Metodo usato per ReBadge** (senza password del database, con un token di accesso salvato in `~/.rebadge/supabase_token`):
+- `node scripts/supabase-remote.mjs migrate <ref>`: applica solo le migrazioni mancanti e le registra;
+- `node scripts/supabase-remote.mjs auth <ref> <indirizzo del sito>`: indirizzo, link consentiti, password ≥ 8, conferma obbligatoria, testi email;
+- `node scripts/test-db-remote.mjs <ref>`: i test di sicurezza sul database reale, ognuno in una transazione annullata (non lascia dati).
+
+Nota: sul piano Free i testi delle email si possono cambiare solo dopo aver collegato un SMTP nostro (Resend). Fino ad allora Supabase
+manda le sue email in inglese, che funzionano (link via `/auth/callback`) ma vanno aperte nello stesso browser della registrazione.
 
 > Non eseguire mai i file in `supabase/tests/`: servono solo per i test locali.
 

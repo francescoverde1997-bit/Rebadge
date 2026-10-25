@@ -71,6 +71,9 @@
 | 68 | 2026-10-25 | Test del database su Postgres 17 incluso nel progetto (embedded-postgres, solo sviluppo), stessa versione principale dei nuovi progetti Supabase. | Test eseguibili ovunque con `npm run test:db`, senza Docker né installazioni. |
 | 69 | 2026-10-25 | I file dei report restano "presenze-AAAA-MM-azienda.pdf". | "presenze" descrive il contenuto per il consulente; non è il vecchio nome del prodotto. |
 | 70 | 2026-10-25 | Node.js 22 come versione minima (tipi @types/node 22). | LTS usata anche da Vercel; richiesta da vitest 5. |
+| 71 | 2026-10-25 | Database Supabase in Irlanda (eu-west-1) invece di Francoforte; il server Vercel andrà a Dublino. | Progetto creato così; resta in UE ("Dati in Europa" vero), differenza di velocità trascurabile. Scelta confermata dal fondatore. |
+| 72 | 2026-10-25 | Ai ruoli del browser si tolgono TRUNCATE, TRIGGER, REFERENCES su tutte le tabelle e ogni accesso diretto agli anonimi (migrazione 13), anche per le tabelle future. | Supabase li concede di base; TRUNCATE non passa dalla RLS. Seconda linea di difesa. |
+| 73 | 2026-10-25 | Migrazioni e configurazione del Supabase reale tramite Management API con un token (script in `scripts/`), senza la password del database. | Riproducibile, nessun segreto nel progetto; le migrazioni sono registrate e mai riapplicate. |
 | 9 | 2026-10-21 | Festività nazionali calcolate nel codice (incluso 4 ottobre dal 2026). Santo Patrono configurabile in fase successiva. | Nessuna tabella da mantenere. |
 
 ## Da verificare con un legale / consulente del lavoro

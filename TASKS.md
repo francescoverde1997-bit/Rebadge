@@ -190,7 +190,11 @@ Legenda: [x] fatto e testato · [ ] da fare · (!) richiede decisione del fondat
 ## Fase 8 — Lancio
 Piano dettagliato, costi e ordine dei passi: [docs/FASE_D.md](docs/FASE_D.md) (approvato il 25/10).
 - [x] D1 GitHub: repository privato `francescoverde1997-bit/Rebadge`, ramo main caricato; accesso dal Mac con chiave dedicata al solo repository (deploy key, `~/.ssh/rebadge_github`, alias `github-rebadge`)
-- [ ] D2 Supabase gratuito nella regione UE (Francoforte)
+- [x] D2 Supabase gratuito `vhyjffmgvmsldfrfbbvf` in UE (Irlanda, scelta al posto di Francoforte), Postgres 17: 13 migrazioni applicate e registrate,
+      11 tabelle tutte con RLS, accesso configurato (password ≥ 8, conferma email obbligatoria); tutti i test di sicurezza passano sul database reale (in transazioni annullate)
+- [x] Scoperto sul Supabase reale: permessi predefiniti troppo ampi (TRUNCATE ai ruoli del browser) → migrazione 13 + test 95_grants
+- [ ] D3 Tipi TypeScript generati dal database reale e collegati al codice
+- [ ] D4 Vercel (regione Dublino) · D5 Stripe test · D6 dominio · D7 email Resend + testi in italiano · D8 monitoraggio · D9 legale · D10 lancio
 - [ ] Tipi TypeScript generati dal database (`supabase gen types`): da fare sul progetto Supabase reale, in fase D (qui manca Docker)
 - [ ] Privacy policy e termini
 - [ ] Collegamento al progetto Supabase reale + deploy su Vercel (richiede approvazione)
