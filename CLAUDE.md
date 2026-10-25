@@ -39,6 +39,7 @@ src/lib/company.ts     azienda dell'utente corrente (getCurrentCompany / require
 src/lib/attendance.ts  caricamento timbrature a pagine, impostazioni, dipendenti (server)
 src/lib/report.ts      dati del report mensile (funzioni pure); report-pdf.ts e report-xlsx.ts generano i file
 src/lib/report-data.ts caricamento report, mesi chiusi con regole congelate, logo per il PDF (server)
+vercel.json            server Vercel a Dublino (dub1), vicino al database Supabase in Irlanda
 src/lib/plans.ts       UNICA fonte di piani, prezzi (anche al giorno), limiti, testi (funzioni pure)
 src/app/page.tsx       homepage pubblica; schermate in public/home generate da scripts/home-shots.mjs (`npm run shots:home` con la demo avviata)
 src/components/logo.tsx marchio ReBadge (BadgeMark, Logo, slogan); icone e file in public/brand con `npm run brand:icons`
