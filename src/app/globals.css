@@ -1,0 +1,173 @@
+@import "tailwindcss";
+@import "@fontsource-variable/bricolage-grotesque";
+@import "@fontsource-variable/public-sans";
+
+/*
+  Identità: il "cartellino" della timbratrice. Carta fredda, inchiostro blu,
+  verde per chi è presente, ambra per ciò che va sistemato.
+  L'elemento memorabile è il nome dell'azienda in Bricolage, grande, come intestazione.
+*/
+@theme {
+  --color-paper: #f7f8fa;
+  --color-card: #ffffff;
+  --color-ink: #1b2b44;
+  --color-ink-soft: #4a5a70;
+  --color-line: #dde2ea;
+  --color-brand: #24508a;
+  --color-brand-dark: #1a3d6b;
+  --color-present: #1d7f52;
+  --color-present-soft: #e3f3ea;
+  --color-warn: #7a4d07; /* ambra scuro: testo leggibile (≥ 4,5:1) anche sul fondo warn-soft */
+  --color-warn-soft: #fbf0db;
+  --color-danger: #b3262f;
+  --color-danger-soft: #fbe6e7;
+
+  --font-display: "Bricolage Grotesque Variable", ui-sans-serif, system-ui, sans-serif;
+  --font-sans: "Public Sans Variable", ui-sans-serif, system-ui, sans-serif;
+}
+
+html {
+  background: var(--color-paper);
+  color: var(--color-ink);
+  font-family: var(--font-sans);
+  font-feature-settings: "tnum" 1; /* cifre tabellari: gli orari restano allineati */
+}
+
+:focus-visible {
+  outline: 2px solid var(--color-brand);
+  outline-offset: 2px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { transition: none !important; animation: none !important; }
+}
+
+/* Cambio prezzo mese/giorno */
+@keyframes price-in {
+  from { opacity: 0; transform: translateY(6px); }
+  to { opacity: 1; transform: none; }
+}
+.price-in { display: inline-block; animation: price-in 220ms ease-out; }
+
+/* =====================================================================
+   Movimento — micro-interazioni
+   Regole: 150–250 ms, curva di uscita morbida, nessun movimento continuo
+   (tranne gli indicatori di caricamento, solo mentre si attende).
+   Gli stili qui sotto sono fuori dai layer di Tailwind: valgono su tutti
+   i pulsanti e i link, senza toccare colori o struttura.
+   ===================================================================== */
+:root {
+  scroll-behavior: smooth; /* link interni (Come funziona, Prezzi, Richiedi un preventivo) */
+  --ease-out: cubic-bezier(0.2, 0.8, 0.2, 1);
+  --dur-fast: 150ms;
+  --dur: 200ms;
+  --dur-slow: 250ms;
+  interpolate-size: allow-keywords; /* apertura morbida dei <details> nei browser che la supportano */
+}
+
+/* Pulsanti e link: colori, ombra e pressione animati */
+button, a, summary, select, input, textarea {
+  transition-property: color, background-color, border-color, text-decoration-color, box-shadow, opacity, scale;
+  transition-duration: var(--dur-fast);
+  transition-timing-function: var(--ease-out);
+}
+/* Pressione: il pulsante "affonda" appena (anche sul tablet della timbratrice) */
+button:not(:disabled):active,
+a[class*="inline-flex"][class*=" h-1"]:active,
+a[class*="inline-flex"][class*=" h-9"]:active {
+  scale: 0.97;
+  transition-duration: 80ms;
+}
+@media (hover: hover) {
+  /* pulsanti principali: un filo d'ombra nel colore del marchio, nessun cambio di colore */
+  :is(button, a)[class*="bg-brand"]:not(:disabled):hover {
+    box-shadow: 0 6px 16px -8px rgb(36 80 138 / 0.55);
+  }
+  :is(button, a)[class*="border-line"][class*="bg-card"]:not(:disabled):hover {
+    box-shadow: 0 4px 12px -8px rgb(27 43 68 / 0.35);
+  }
+}
+input:focus, select:focus, textarea:focus {
+  box-shadow: 0 0 0 3px rgb(36 80 138 / 0.12);
+}
+
+/* Entrate: contenuti che compaiono (avvisi, conferme, nuove righe) */
+@keyframes rise-in {
+  from { opacity: 0; translate: 0 4px; }
+  to { opacity: 1; translate: 0 0; }
+}
+@keyframes pop-in {
+  from { opacity: 0; scale: 0.96; }
+  to { opacity: 1; scale: 1; }
+}
+.anim-in { animation: rise-in var(--dur) var(--ease-out) both; }
+.anim-pop { animation: pop-in var(--dur-fast) var(--ease-out) both; }
+
+@keyframes fade-in { from { opacity: 0; } to { opacity: 1; } }
+.anim-fade { animation: fade-in var(--dur) var(--ease-out) both; }
+/* PIN errato: la fila di pallini oscilla una sola volta, appena */
+@keyframes shake {
+  20%, 60% { translate: -5px 0; }
+  40%, 80% { translate: 5px 0; }
+}
+.shake { animation: shake 240ms var(--ease-out) both; }
+
+/* Cambio di pagina nell'area riservata (template.tsx): dissolvenza breve */
+@keyframes page-in {
+  from { opacity: 0; translate: 0 6px; }
+  to { opacity: 1; translate: 0 0; }
+}
+.page-in { animation: page-in var(--dur-slow) var(--ease-out) both; }
+
+/* Spunta che si disegna: conferma di salvataggio */
+@keyframes draw { to { stroke-dashoffset: 0; } }
+.check-draw path { stroke-dasharray: 24; stroke-dashoffset: 24; animation: draw var(--dur-slow) var(--ease-out) 60ms forwards; }
+
+/* Caricamento: anello discreto nei pulsanti, barra sottile in alto tra una pagina e l'altra (nav-progress.tsx) */
+@keyframes spin { to { rotate: 360deg; } }
+.spinner { animation: spin 700ms linear infinite; }
+@keyframes progress {
+  0% { translate: -100% 0; }
+  100% { translate: 250% 0; }
+}
+.progress-bar { animation: progress 1100ms var(--ease-out) infinite; }
+
+/* Schede e riquadri cliccabili: bordo e ombra delicati al passaggio */
+.card-hover {
+  transition: border-color var(--dur) var(--ease-out), box-shadow var(--dur) var(--ease-out), translate var(--dur) var(--ease-out);
+}
+@media (hover: hover) {
+  .card-hover:not([class*="shadow-["]):hover { box-shadow: 0 12px 28px -18px rgb(27 43 68 / 0.35); }
+  .card-hover.lift:hover { translate: 0 -2px; }
+}
+
+/* Tabelle e calendari: riga in evidenza al passaggio, celle con risposta al tocco */
+.row-hover > * { transition: background-color var(--dur-fast) var(--ease-out); }
+@media (hover: hover) {
+  .row-hover:hover > * { background-color: rgb(247 248 250 / 0.9); }
+  .chip-hover { transition: scale var(--dur-fast) var(--ease-out), box-shadow var(--dur-fast) var(--ease-out); }
+  .chip-hover:hover { scale: 1.08; box-shadow: 0 2px 6px -2px rgb(27 43 68 / 0.35); }
+}
+
+/* Domande frequenti: apertura morbida (dove supportato), segno + che ruota */
+details::details-content {
+  block-size: 0;
+  overflow: hidden;
+  opacity: 0;
+  transition: block-size var(--dur) var(--ease-out), opacity var(--dur) var(--ease-out), content-visibility var(--dur) allow-discrete;
+}
+details[open]::details-content { block-size: auto; opacity: 1; }
+details summary > span[aria-hidden] { transition: rotate var(--dur) var(--ease-out); }
+
+@media (prefers-reduced-motion: reduce) {
+  :root { scroll-behavior: auto; }
+  button:not(:disabled):active, a:active { scale: none; }
+  .spinner, .progress-bar { animation: none !important; }
+  .check-draw path { stroke-dashoffset: 0; } /* la spunta resta visibile, senza disegnarsi */
+  .card-hover.lift:hover, .chip-hover:hover, [data-leave] { translate: none; scale: none !important; }
+}
+
+/* Eliminazione in corso: la riga si attenua finché il server non conferma */
+li:has(> div [data-removing]) > div:first-child { opacity: 0.45; transition: opacity var(--dur) var(--ease-out); }
+/* la barra di navigazione compare solo dopo 150 ms */
+.nav-progress { animation: fade-in var(--dur-fast) var(--ease-out) 150ms both; }

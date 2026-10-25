@@ -1,0 +1,81 @@
+# Decisioni di prodotto e tecniche
+
+| # | Data | Decisione | Motivo |
+|---|---|---|---|
+| 1 | 2026-10-21 | Registrazione con soli Nome, Email, Password. Il Nome diventa il nome azienda e il titolo della dashboard; modificabile dal titolare. | Richiesta del fondatore; zero attrito al signup. |
+| 2 | 2026-10-21 | L'azienda nasce da un trigger su `auth.users`. | Atomico: impossibile avere un utente senza azienda. |
+| 3 | 2026-10-21 | Logo caricabile solo dal titolare (bucket privato `logos`, max 2 MB, PNG/JPG/WebP/SVG). I dipendenti non caricano nulla. | Richiesta del fondatore. **Da confermare**: supporto logo in formato PDF. |
+| 4 | 2026-10-21 | Regole ore predefinite: nessun arrotondamento, pausa automatica disattivata (pausa timbrata), straordinario oltre 8 h/giorno, turno massimo 16 h. Tutto configurabile per azienda. | Valori neutri e conformi al caso più comune; nessuna "sorpresa" in busta paga. |
+| 5 | 2026-10-21 | Turno attribuito al giorno di entrata; durata in tempo reale (gestisce ora legale). | Regola semplice e prevedibile per i turni notturni. |
+| 6 | 2026-10-21 | Tablet: selezione nome dipendente + PIN 4–6 cifre. Entrata/uscita decisa automaticamente. Doppio tocco entro 60 s ignorato. | Un solo tocco + PIN: il flusso più veloce possibile. |
+| 7 | 2026-10-21 | Attivazione tablet: il titolare apre l'app sul tablet e preme "Usa come timbratrice"; il token resta sul tablet, la sessione del titolare viene chiusa. | Nessun codice da digitare. |
+| 8 | 2026-10-21 | Niente biometria né geolocalizzazione. | Principio di minimizzazione GDPR; il Garante considera la biometria per le presenze di norma non proporzionata. |
+| 10 | 2026-10-21 | Rotte in italiano (`/registrati`, `/accedi`, `/app/impostazioni`). | Gli URL li vede l'imprenditore. |
+| 11 | 2026-10-21 | Test end-to-end con un finto Supabase in memoria; sicurezza testata a parte su Postgres. | Docker Hub non raggiungibile dall'ambiente di sviluppo; la verifica finale avviene sul progetto Supabase reale. |
+| 12 | 2026-10-21 | Font inclusi nel progetto (Bricolage Grotesque per titoli, Public Sans con cifre tabellari per il testo). | Nessuna dipendenza da Google Fonts a runtime; orari allineati. |
+| 13 | 2026-10-21 | Solo il titolare modifica le ore (correzioni, annullamenti, regole di calcolo, PIN, ferie approvate). Il dipendente può solo timbrare dal tablet e, in futuro, consultare le proprie ore e chiedere ferie. Garantito dal database, non solo dall'interfaccia. | Richiesta del fondatore; affidabilità del report per il consulente. |
+| 14 | 2026-10-21 | Dipendenti si disattivano, non si cancellano. | Le ore passate devono restare nei report; la cancellazione definitiva va decisa con i tempi di conservazione GDPR. |
+| 15 | 2026-10-21 | Il PIN si sceglie alla creazione (o si genera) e non è mai più visibile, nemmeno al titolare: si può solo sostituire. | Il PIN resta segreto del dipendente; nessun dato sensibile mostrato a schermo. |
+| 16 | 2026-10-21 | PIN banali rifiutati (cifre uguali o in sequenza). | Sul tablet in sede un PIN 1234 equivale a nessun PIN. |
+| 17 | 2026-10-21 | Bucket del logo in lettura pubblica (scrittura solo titolare). | Il tablet non ha una sessione utente; il logo è un'immagine di marchio. Elimina gli URL firmati in scadenza. |
+| 18 | 2026-10-21 | Il tablet non mostra chi è presente. | Minimizzazione: lo schermo è visibile a tutti in sede. La conferma dice già se è entrata o uscita. |
+| 19 | 2026-10-21 | Senza rete la timbratura viene rifiutata con un avviso, non messa in coda. | Una coda offline può falsare l'ora (orologio del tablet) e creare doppioni: va progettata a parte. Nell'MVP vale "o è registrata o te lo diciamo". |
+| 20 | 2026-10-21 | Nomi sul tablet in ordine di nome (non cognome). | I colleghi si cercano per nome di battesimo. |
+| 21 | 2026-10-22 | Un turno con timbratura mancante non viene conteggiato finché il titolare non lo sistema. | Meglio un buco evidente che ore inventate nel report al consulente. |
+| 22 | 2026-10-22 | Le correzioni non modificano né cancellano: si aggiunge una timbratura manuale o se ne annulla una, sempre con motivo. | Tracciabilità completa in caso di contestazione o ispezione. |
+| 23 | 2026-10-22 | Ore mostrate in ore:minuti (7:30). L'export per il consulente avrà anche le ore decimali (7,50). | Il titolare ragiona in ore e minuti; i software paghe spesso in decimali. |
+| 24 | 2026-10-22 | Ore notturne e festive indicate come "di cui" del totale, senza calcolare maggiorazioni. Fascia notturna predefinita 22:00–06:00, modificabile; entrambi i conteggi disattivabili dal titolare. | Le percentuali dipendono dal CCNL: le applica il consulente. Il titolare decide cosa mostrare. |
+| 25 | 2026-10-22 | Le ore festive si attribuiscono per data reale (un turno sabato 22 → domenica 6 ha 6 ore festive), mentre il turno resta nel giorno di inizio. | È il criterio usato dai contratti per le maggiorazioni festive. |
+| 26 | 2026-10-22 | Santo Patrono inserito dal cliente nelle Impostazioni; conta come festività. | Cambia da comune a comune. |
+| 27 | 2026-10-22 | Logo solo come immagine (PNG, JPG, WebP, SVG). | Decisione del fondatore. |
+| 28 | 2026-10-22 | Scaricando il PDF definitivo di un mese, il mese si chiude: le ore non cambiano più. Riapertura solo tramite assistenza. Si chiudono solo mesi finiti e senza timbrature da sistemare. | Decisione del fondatore; le due condizioni evitano di bloccare il tablet o un mese con ore mancanti. |
+| 29 | 2026-10-22 | Collegamento a Supabase rimandato: si continua con la demo. | Decisione del fondatore. |
+| 30 | 2026-10-22 | Le assenze le inserisce il titolare e sono già approvate. Le richieste dei dipendenti arriveranno con l'accesso dipendente. | Nell'MVP i dipendenti non hanno un account: solo il tablet. |
+| 31 | 2026-10-22 | Ferie e permessi a giornata contano i giorni lavorativi (5 o 6 giorni, scelto dal titolare); la malattia i giorni di calendario. | È il criterio più comune; la scelta 5/6 giorni copre uffici e pubblici esercizi. |
+| 32 | 2026-10-22 | ~~Un'assenza si elimina e si reinserisce, non si modifica.~~ Sostituita dalla 47. | — |
+| 33 | 2026-10-22 | Alla chiusura si salvano le regole di calcolo in vigore: il mese chiuso si ricalcola sempre con quelle. Il PDF inviato è archiviato e non modificabile. | Cambiare le regole dopo non deve alterare un mese già inviato al consulente. |
+| 34 | 2026-10-22 | PDF generato sul server (jsPDF), logo convertito in PNG (sharp); se il logo non è leggibile il PDF esce senza logo. | Nessun servizio esterno; il report non si blocca mai per un'immagine. |
+| 35 | 2026-10-22 | Excel con ore decimali (7,50); PDF con ore:minuti e totale anche in decimali. | Il consulente importa i decimali; il titolare legge ore e minuti. |
+| 36 | 2026-10-22 | Nel PDF le righe "Firma del dipendente" e "Firma del datore di lavoro". | Molti consulenti chiedono il foglio presenze firmato. |
+| 37 | 2026-10-22 | ~~Piani Base 9,99 € (5), Plus 24,99 € (15), Pro 44,99 € (30).~~ Sostituita dalla 41. | — |
+| 38 | 2026-10-22 | Lo stato dell'abbonamento lo scrive solo il webhook Stripe (chiave service_role sul server). | Il pagamento è la fonte di verità; il client non può attivarsi un piano. |
+| 39 | 2026-10-22 | A servizio sospeso: report sempre scaricabili, tablet sospeso ma non revocato, nessun dato cancellato. | Il cliente non perde mai i documenti per il consulente; al rinnovo tutto riparte senza riconfigurare. |
+| 40 | 2026-10-22 | Pagamento in ritardo (past_due) non blocca il servizio. | Stripe ritenta per alcuni giorni: bloccare subito penalizza clienti in regola con una carta scaduta. |
+| 41 | 2026-10-22 | Piani: Base 9,99 €/mese fino a 5 dipendenti, Plus 29,99 €/mese da 6 a 30, Personalizzato oltre 30 su preventivo. IVA esclusa. Il vecchio Pro confluisce in Plus. | Decisione del fondatore. Soglia 30 scelta tecnica, modificabile in `src/lib/plans.ts`. |
+| 42 | 2026-10-22 | Prezzo mostrato anche al giorno (mese × 12 / 365: 0,33 € e 0,99 €), con interruttore Al mese / Al giorno. | Richiesta del fondatore: il prezzo al giorno è più leggibile come costo. |
+| 43 | 2026-10-22 | Personalizzato: richiesta di preventivo salvata nel DB (anche da visitatori, anti-spam 3/ora per email + campo trappola), letta solo dal nostro team. Si attiva creando in Stripe un prezzo dedicato: ogni prezzo non standard è riconosciuto come Personalizzato; limite dipendenti in `companies.custom_employee_limit` (predefinito 1000). | Nessuna tabella prezzi da mantenere: il preventivo resta flessibile. |
+| 44 | 2026-10-22 | Pagina pubblica `/prezzi` con calcolatore per numero di dipendenti, collegata da Accedi/Registrati. | Marketing: il visitatore vede subito il proprio prezzo. |
+| 45 | 2026-10-22 | Homepage con schermate vere dell'app demo, rigenerabili da script; nessuna testimonianza o numero di clienti finché non ce ne sono di reali. | Credibilità e coerenza con il prodotto; niente affermazioni non verificabili. |
+| 46 | 2026-10-22 | La homepage dichiara "Dati in Europa": al lancio il progetto Supabase va creato nella regione UE (Francoforte), come già indicato in SUPABASE_SETUP.md. | L'affermazione deve restare vera. |
+| 47 | 2026-10-22 | Le assenze si possono anche modificare (dipendente, tipo, date, protocollo, nota), con gli stessi controlli dell'inserimento: niente sovrapposizioni, niente mesi chiusi, tutto nel registro modifiche. | Richiesta del fondatore: correggere una malattia inserita per errore senza rifarla. |
+| 48 | 2026-10-22 | Malattia: protocollo del certificato INPS facoltativo (solo il numero, nessun certificato o diagnosi caricati). In rosso pieno nel calendario e nel dettaglio presenze; nel PDF in rosso (colonna, riquadro e giorni evidenziati) con il protocollo; nell'Excel colonna "Protocolli certificati INPS". | Il consulente usa il protocollo per la busta paga; non caricare certificati evita di trattare dati sanitari. Rosso richiesto dal fondatore. |
+| 49 | 2026-10-22 | Micro-animazioni con un unico sistema in globals.css: 150–250 ms, curva di uscita morbida, nessun movimento continuo (solo indicatori di caricamento mentre si attende). Colori e struttura invariati. "Riduci movimento" del sistema operativo spegne tutto. | Richiesta del fondatore: sensazione premium senza appesantire. |
+| 50 | 2026-10-22 | Niente `loading.tsx` (scheletro a ogni apertura di pagina): al suo posto una barra sottile in alto, solo durante i cambi di sezione e solo se durano più di 150 ms. | Lo scheletro lampeggiava anche al primo caricamento e cambiava il comportamento delle pagine. |
+| 51 | 2026-10-22 | Nome **ReBadge**, slogan **"Timbra. Controlla. Invia."**, logo "A · Il badge" (due tesserini sovrapposti con la spunta), stessi colori della piattaforma. | Scelte del fondatore. Da verificare dominio e marchio (TMview/UIBM) prima del lancio: "rebadge" è anche una parola inglese comune. |
+| 52 | 2026-10-22 | Nell'area riservata e sul tablet il protagonista resta il nome/logo dell'azienda cliente; ReBadge compare come firma discreta (piè di pagina, icona, titolo della scheda, PDF "Generato con ReBadge"). | Il titolare usa il prodotto per la sua azienda; il nostro marchio non deve competere con il suo. |
+| 53 | 2026-10-22 | Fase C dell'interfaccia sviluppata dalle bozze approvate dal fondatore: stessi colori e caratteri, cambia la struttura delle schermate. | Richiesta del fondatore: qualità superiore senza rifare il progetto. |
+| 54 | 2026-10-22 | Ambra (`--color-warn`) scurito da #a86a0c a #7a4d07. | Il testo ambra sul fondo ambra chiaro non raggiungeva il contrasto minimo 4,5:1. |
+| 55 | 2026-10-22 | Pagine di dati a tutta larghezza; pagine con moduli in colonna leggibile (max 3xl). | Prima ogni pagina aveva una larghezza diversa e sul computer restava molto spazio vuoto. |
+| 56 | 2026-10-22 | Smartphone: barra in basso con Oggi, Presenze, Ferie, Report e "Altro" (Dipendenti, Tablet, Impostazioni, Abbonamento, Esci). | Con 8 voci in una riga scorrevole metà delle sezioni restava nascosta. |
+| 57 | 2026-10-22 | Dettaglio dipendente: il pulsante ⋯ apre direttamente il pannello delle correzioni (aggiungi e annulla insieme) invece di un menu a due voci come nella bozza; i giorni di riposo restano righe singole compatte. | Un tocco in meno, e ogni giorno resta correggibile da solo (anche sabato o domenica lavorati). |
+| 58 | 2026-10-22 | Timbratrice: filtro per iniziale del nome solo da 13 dipendenti in su; si azzera dopo ogni timbratura. | Sotto quella soglia i nomi stanno in una schermata; il collega successivo deve ritrovare l'elenco completo. |
+| 59 | 2026-10-22 | "Prossime assenze" in Oggi: le prossime due settimane, al massimo 5 voci; il riquadro del report mostra il mese scorso (da chiudere o chiuso). | Quello che serve al titolare ogni mattina, senza aprire altre sezioni. |
+| 60 | 2026-10-22 | Test del PDF con `pdftotext` se presente, altrimenti con pdfjs-dist (dipendenza solo di sviluppo). | I test devono girare anche su Mac senza poppler. |
+| 61 | 2026-10-22 | Resta Next.js 15 (ultima 15.5.28) con PostCSS forzato alla versione corretta, invece di passare a Next 16. | Il passaggio a 16 è un aggiornamento maggiore (middleware rinominato e altro): stesso risultato di sicurezza con rischio minimo. |
+| 62 | 2026-10-22 | Il webhook Stripe rilegge sempre l'abbonamento da Stripe invece di fidarsi del contenuto dell'evento. | Stripe non garantisce l'ordine degli eventi; una chiamata in più è il prezzo della correttezza. |
+| 63 | 2026-10-22 | Prima di aprire un Checkout si chiede a Stripe se il cliente ha già un abbonamento vivo (attivo, in prova, in ritardo, non pagato, incompleto, in pausa). | Evita doppi addebiti per doppio clic, due schede o webhook in ritardo. |
+| 64 | 2026-10-22 | Content-Security-Policy solo con `frame-ancestors 'none'`; nessuna policy completa sugli script per ora. | Protegge dal clickjacking senza rischiare di rompere Next.js e Stripe; una CSP completa va provata in produzione (fase D). |
+| 65 | 2026-10-22 | Il bucket dei report resta senza cancellazione per gli utenti; il PDF orfano di una chiusura fallita lo toglie il server con la chiave di servizio. | I documenti inviati al consulente non devono poter essere alterati da nessun utente. |
+| 66 | 2026-10-22 | Tipi del database generati in fase D dal progetto Supabase reale. | `supabase gen types` qui richiede Docker; scriverli a mano annullerebbe il loro scopo. |
+| 67 | 2026-10-25 | Video di presentazione per la landing: 16:9, 57 s, interfacce ricostruite da quelle vere, voce ElevenLabs "Marcello" (pronuncia "Ribèdg"), musica originale, nessun prezzo ("paghi in base al numero di dipendenti"), nessun effetto sonoro. Ospitato sul nostro sito, non su YouTube; parte solo al clic. | Approvato dal fondatore; niente cookie di terzi in homepage, solo affermazioni vere. |
+| 68 | 2026-10-25 | Test del database su Postgres 17 incluso nel progetto (embedded-postgres, solo sviluppo), stessa versione principale dei nuovi progetti Supabase. | Test eseguibili ovunque con `npm run test:db`, senza Docker né installazioni. |
+| 69 | 2026-10-25 | I file dei report restano "presenze-AAAA-MM-azienda.pdf". | "presenze" descrive il contenuto per il consulente; non è il vecchio nome del prodotto. |
+| 70 | 2026-10-25 | Node.js 22 come versione minima (tipi @types/node 22). | LTS usata anche da Vercel; richiesta da vitest 5. |
+| 9 | 2026-10-21 | Festività nazionali calcolate nel codice (incluso 4 ottobre dal 2026). Santo Patrono configurabile in fase successiva. | Nessuna tabella da mantenere. |
+
+## Da verificare con un legale / consulente del lavoro
+- Informativa privacy ai dipendenti e base giuridica del trattamento.
+- Compatibilità con art. 4 Statuto dei Lavoratori (strumenti di rilevazione presenze).
+- DPA tra il servizio (responsabile) e le aziende clienti (titolari); server Supabase in UE.
+- Tempi di conservazione di timbrature e registro modifiche.
+- Formato dell'export accettato dai consulenti.
