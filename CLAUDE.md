@@ -40,6 +40,7 @@ src/lib/plans.ts       UNICA fonte di piani, prezzi (anche al giorno), limiti, t
 src/app/page.tsx       homepage pubblica; schermate in public/home generate da scripts/home-shots.mjs (`npm run shots:home` con la demo avviata)
 src/components/logo.tsx marchio ReBadge (BadgeMark, Logo, slogan); icone e file in public/brand con `npm run brand:icons`
 src/components/site.tsx intestazione e piè di pagina delle pagine pubbliche
+src/components/video-dialog.tsx "Guarda come funziona": video di presentazione in public/video/ (sorgenti in ~/Desktop/ADV/ReBadge Presentazione Ad)
 src/components/pricing.tsx  tabella prezzi condivisa (/prezzi e /app/abbonamento); custom-plan-form.tsx richiesta preventivo
 src/lib/stripe.ts, billing.ts  client Stripe e sincronizzazione abbonamento (server); webhook in src/app/api/stripe/webhook
 src/lib/leave.ts       assenze: giorni lavorativi, totali del mese, sovrapposizioni (funzioni pure)

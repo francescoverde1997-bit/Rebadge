@@ -43,6 +43,26 @@ try {
     await small.close();
   });
 
+  await step("homepage: \"Guarda come funziona\" apre il video, che parte con l'audio e si ferma alla chiusura", async () => {
+    const home = await browser.newPage({ viewport: { width: 1280, height: 900 } });
+    const videoReqs = []; home.on("request", (r) => r.url().endsWith(".mp4") && videoReqs.push(r.url()));
+    await home.goto(`${APP}/`, { waitUntil: "networkidle" });
+    assert.equal(videoReqs.length, 0, "il video non si scarica prima del clic");
+    await home.getByRole("button", { name: /Guarda come funziona/ }).click();
+    const dialog = home.getByRole("dialog", { name: "Video: come funziona ReBadge" });
+    await dialog.waitFor();
+    await home.waitForFunction(() => document.querySelector("dialog video").currentTime > 0.5, null, { timeout: 15000 });
+    assert.equal(await home.evaluate(() => document.querySelector("dialog video").muted), false);
+    await home.keyboard.press("Escape");
+    await dialog.waitFor({ state: "hidden" });
+    await home.waitForFunction(() => document.querySelector("dialog video").paused, null, { timeout: 2000 });
+    // Safari e iPhone chiedono il video a pezzi (Range): il server deve rispondere 206
+    const r = await fetch(`${APP}/video/rebadge-presentazione.mp4`, { headers: { Range: "bytes=0-1023" } });
+    assert.equal(r.status, 206);
+    assert.equal(r.headers.get("content-type"), "video/mp4");
+    await home.close();
+  });
+
   const page = await browser.newPage({ viewport: { width: 1280, height: 900 }, locale: "it-IT" });
 
   await step("pagina inesistente: 404 in italiano con le strade per tornare", async () => {

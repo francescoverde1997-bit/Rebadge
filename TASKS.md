@@ -130,7 +130,7 @@ Legenda: [x] fatto e testato · [ ] da fare · (!) richiede decisione del fondat
 - [x] Intestazione e piè di pagina condivisi con /prezzi
 - [x] Test: 7 controlli e2e (totale e2e: 104), desktop e smartphone
 - [x] Video di presentazione approvato il 25/10 (57 s, 16:9, voce Marcello, musica originale, sottotitoli): file in `~/Desktop/ADV/ReBadge Presentazione Ad/out/`
-- [ ] Inserire il video nella homepage (pulsante "Guarda come funziona", file sul nostro sito con poster e sottotitoli): dopo la fase A
+- [x] Video nella homepage: pulsante "Guarda come funziona" accanto alle prove, finestra con il video (parte al clic con l'audio, Esc/✕/clic fuori per chiudere, si ferma alla chiusura); file in `public/video/` con poster e sottotitoli; si scarica solo al clic; controlli e2e in fase 12
 
 ## Fase 7d — Malattia ✅
 - [x] Malattia con data di inizio e fine e protocollo certificato INPS facoltativo (migrazione 12)

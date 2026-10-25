@@ -4,6 +4,7 @@ import Link from "next/link";
 import { PLANS, dailyPriceCents, formatPrice } from "@/lib/plans";
 import { Pricing, TrialLink } from "@/components/pricing";
 import { SiteFooter, SiteHeader } from "@/components/site";
+import { VideoButton } from "@/components/video-dialog";
 // Schermate vere dell'app demo: si rigenerano con `npm run shots:home`
 import shotOggi from "../../public/home/oggi.webp";
 import shotPresenze from "../../public/home/presenze.webp";
@@ -94,6 +95,7 @@ export default function Home() {
               <Link href="/prezzi" className="inline-flex h-12 items-center justify-center rounded-lg border border-line bg-card px-6 text-lg font-semibold hover:border-ink-soft">
                 Vedi i prezzi
               </Link>
+              <VideoButton />
             </div>
             <p className="mt-4 text-ink-soft">
               Senza carta di credito · da <strong className="font-semibold text-ink">{fromDay} al giorno</strong>
