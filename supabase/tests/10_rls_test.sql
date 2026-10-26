@@ -18,14 +18,19 @@ insert into auth.users (id, email, raw_user_meta_data) values
 do $$
 declare n int; nm text;
 begin
-  select count(*) into n from companies;  assert n = 3, 'Ogni registrazione crea un''azienda';
+  -- solo le aziende dei 3 utenti del test: sul database reale possono esisterne altre
+  select count(*) into n from company_members where user_id in
+    ('11111111-1111-1111-1111-111111111111', '22222222-2222-2222-2222-222222222222', '33333333-3333-3333-3333-333333333333');
+  assert n = 3, 'Ogni registrazione crea un''azienda';
   select name into nm from companies c join company_members m on m.company_id = c.id
    where m.user_id = '11111111-1111-1111-1111-111111111111';
   assert nm = 'Bar Mario', 'Il nome di registrazione diventa il nome azienda';
   select name into nm from companies c join company_members m on m.company_id = c.id
    where m.user_id = '33333333-3333-3333-3333-333333333333';
   assert nm = 'anon', 'Senza nome si usa la parte locale dell''email';
-  select count(*) into n from company_settings where rounding_minutes = 0 and daily_overtime_after_minutes = 480;
+  select count(*) into n from company_settings where rounding_minutes = 0 and daily_overtime_after_minutes = 480
+    and company_id in (select company_id from company_members where user_id in
+      ('11111111-1111-1111-1111-111111111111', '22222222-2222-2222-2222-222222222222', '33333333-3333-3333-3333-333333333333'));
   assert n = 3, 'Impostazioni predefinite create';
 end $$;
 

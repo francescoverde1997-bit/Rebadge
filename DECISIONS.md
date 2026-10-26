@@ -74,6 +74,7 @@
 | 71 | 2026-10-25 | Database Supabase in Irlanda (eu-west-1) invece di Francoforte; il server Vercel andrà a Dublino. | Progetto creato così; resta in UE ("Dati in Europa" vero), differenza di velocità trascurabile. Scelta confermata dal fondatore. |
 | 72 | 2026-10-25 | Ai ruoli del browser si tolgono TRUNCATE, TRIGGER, REFERENCES su tutte le tabelle e ogni accesso diretto agli anonimi (migrazione 13), anche per le tabelle future. | Supabase li concede di base; TRUNCATE non passa dalla RLS. Seconda linea di difesa. |
 | 73 | 2026-10-25 | Migrazioni e configurazione del Supabase reale tramite Management API con un token (script in `scripts/`), senza la password del database. | Riproducibile, nessun segreto nel progetto; le migrazioni sono registrate e mai riapplicate. |
+| 74 | 2026-10-27 | Promemoria serale al titolare: un'email solo se qualcuno risulta ancora al lavoro o ci sono timbrature da sistemare (ripetute ogni sera finché restano); orario scelto dall'azienda 18:00–23:30, predefinito 20:00, disattivabile; una sola email al giorno; nessuna chiusura automatica dei turni. | Si sistemano le dimenticanze la sera stessa, quando l'orario è fresco; niente email inutili; nessuna ora inventata (decisione 21). |
 | 9 | 2026-10-21 | Festività nazionali calcolate nel codice (incluso 4 ottobre dal 2026). Santo Patrono configurabile in fase successiva. | Nessuna tabella da mantenere. |
 
 ## Da verificare con un legale / consulente del lavoro

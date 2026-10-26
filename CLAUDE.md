@@ -29,6 +29,7 @@ src/lib/hours/         motore di calcolo ore e festività (funzioni pure, testat
 src/lib/supabase/      client browser, server e servizio (tipizzati); database.types.ts GENERATO, correzioni in types.ts
 scripts/test-db.mjs    runner dei test DB (Postgres incluso o PGBIN; \set/\echo di psql emulati)
 scripts/e2e/           finto Supabase (solo per e2e, NON emula la RLS) + scenari Playwright
+scripts/e2e/fake-email.mjs  finto Resend per e2e e demo (cattura le email)
 scripts/pdf-text.mjs   testo dei PDF per i test (pdftotext se c'è, altrimenti pdfjs)
 scripts/supabase-remote.mjs  Supabase reale: migrate / auth / sql (token in ~/.rebadge/supabase_token, mai nel progetto)
 scripts/test-db-remote.mjs   test di sicurezza sul Supabase reale, in transazioni annullate
@@ -47,6 +48,8 @@ src/components/site.tsx intestazione e piè di pagina delle pagine pubbliche
 src/components/video-dialog.tsx "Guarda come funziona": video di presentazione in public/video/ (sorgenti in ~/Desktop/ADV/ReBadge Presentazione Ad)
 src/components/pricing.tsx  tabella prezzi condivisa (/prezzi e /app/abbonamento); custom-plan-form.tsx richiesta preventivo
 src/lib/stripe.ts, billing.ts  client Stripe e sincronizzazione abbonamento (server); webhook in src/app/api/stripe/webhook
+src/lib/reminders.ts   promemoria serale: chi è ancora al lavoro e timbrature da sistemare (funzioni pure); reminder-email.ts il testo
+src/lib/email.ts       invio email con Resend (server); src/app/api/cron/promemoria il servizio serale (protetto da CRON_SECRET)
 src/lib/leave.ts       assenze: giorni lavorativi, totali del mese, sovrapposizioni (funzioni pure)
 src/lib/hours/month.ts mese di competenza, finestra di caricamento, chi è presente (funzioni pure)
 src/lib/validation.ts  schemi zod condivisi e traduzione errori Auth

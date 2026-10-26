@@ -5,7 +5,8 @@ import { Field, Notice, SelectField, SubmitButton, submitWithoutReset } from "@/
 import type { CompanySettings } from "@/lib/company";
 import { minutesToTime } from "@/lib/validation";
 import type { FormState } from "../../(auth)/actions";
-import { removeLogo, updateCompanyName, updateHoursRules, uploadLogo } from "./actions";
+import { removeLogo, updateCompanyName, updateHoursRules, updateReminder, uploadLogo } from "./actions";
+import { REMINDER_TIMES } from "@/lib/reminders";
 
 function Feedback({ state }: { state: FormState }) {
   if (state.error) return <Notice tone="error">{state.error}</Notice>;
@@ -257,6 +258,32 @@ export function HoursRulesForm({ settings }: { settings: CompanySettings }) {
 
       <Feedback state={state} />
       <SubmitButton className="self-start" pending={pending} pendingText="Salvataggio…">Salva regole</SubmitButton>
+    </form>
+  );
+}
+
+export function ReminderForm({ enabled, minutes, email }: { enabled: boolean; minutes: number; email: string }) {
+  const [state, action, pending] = useActionState<FormState, FormData>(updateReminder, {});
+  const [on, setOn] = useState(enabled);
+  return (
+    <form onSubmit={submitWithoutReset(action)} className="flex flex-col gap-4" noValidate>
+      <Toggle name="reminder_enabled" label="Mandami il promemoria serale" defaultChecked={enabled} onChange={setOn} />
+      <div className={on ? "" : "opacity-50"}>
+        <SelectField
+          label="Orario"
+          name="reminder_minutes"
+          defaultValue={String(minutes)}
+          disabled={!on}
+          error={state.errors?.reminder_minutes}
+          hint={`Arriva a ${email}, solo se qualcuno risulta ancora al lavoro o c'è una timbratura da sistemare. Se lavorate anche la sera, scegli un orario dopo la chiusura.`}
+          options={REMINDER_TIMES.map((m) => ({ value: String(m), label: minutesToTime(m) }))}
+          className="w-36"
+        />
+        {/* con il menu disattivato il valore non viene inviato: si conserva l'orario scelto */}
+        {!on && <input type="hidden" name="reminder_minutes" value={String(minutes)} />}
+      </div>
+      <Feedback state={state} />
+      <SubmitButton className="self-start" pending={pending} pendingText="Salvataggio…">Salva promemoria</SubmitButton>
     </form>
   );
 }

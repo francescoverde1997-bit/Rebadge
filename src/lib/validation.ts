@@ -253,3 +253,10 @@ export const leaveSchema = z
   .refine((v) => (Date.parse(v.end_date) - Date.parse(v.start_date)) / 86_400_000 <= 366, {
     message: "Un'assenza può durare al massimo un anno", path: ["end_date"],
   });
+
+/** Promemoria serale: attivo e orario (dalle 18:00 alle 23:30, ogni mezz'ora), come il vincolo del database. */
+export const reminderSchema = z
+  .object({
+    reminder_enabled: z.preprocess((v) => v === "on" || v === "true" || v === true, z.boolean()),
+    reminder_minutes: z.coerce.number().refine((v) => v >= 1080 && v <= 1410 && v % 30 === 0, "Scegli un orario dalle 18:00 alle 23:30"),
+  });

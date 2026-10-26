@@ -3,7 +3,7 @@
 import { revalidatePath } from "next/cache";
 import { requireOwner } from "@/lib/company";
 import { createClient } from "@/lib/supabase/server";
-import { companyNameSchema, fieldErrors, hoursRulesSchema, validateLogo } from "@/lib/validation";
+import { companyNameSchema, fieldErrors, hoursRulesSchema, reminderSchema, validateLogo } from "@/lib/validation";
 import type { FormState } from "../../(auth)/actions";
 
 const refresh = () => revalidatePath("/app", "layout");
@@ -70,4 +70,20 @@ export async function updateHoursRules(_: FormState, form: FormData): Promise<Fo
   if (error) return { error: "Non è stato possibile salvare le regole. Riprova" };
   refresh();
   return { success: "Regole salvate. Valgono per tutti i calcoli, anche dei mesi passati." };
+}
+
+export async function updateReminder(_: FormState, form: FormData): Promise<FormState> {
+  const { company } = await requireOwner();
+  const values = { reminder_enabled: String(form.get("reminder_enabled") ?? ""), reminder_minutes: String(form.get("reminder_minutes") ?? "") };
+  const parsed = reminderSchema.safeParse(values);
+  if (!parsed.success) return { errors: fieldErrors(parsed.error), values };
+
+  const supabase = await createClient();
+  const { error } = await supabase
+    .from("company_settings")
+    .update({ ...parsed.data, updated_at: new Date().toISOString() })
+    .eq("company_id", company.id);
+  if (error) return { error: "Non è stato possibile salvare il promemoria. Riprova" };
+  refresh();
+  return { success: parsed.data.reminder_enabled ? "Promemoria salvato" : "Promemoria disattivato" };
 }

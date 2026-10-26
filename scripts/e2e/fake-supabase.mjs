@@ -6,6 +6,7 @@ import { randomUUID } from "node:crypto";
 
 const PORT = Number(process.env.FAKE_SUPABASE_PORT ?? 54400);
 const users = new Map(); // email -> { id, email, password, meta }
+const reminderLog = []; // { company_id, local_date, sent_at }: promemoria serali inviati (solo service_role)
 const tokens = new Map(); // access_token -> userId
 const companies = new Map();
 const members = [];
@@ -58,6 +59,7 @@ function signup(email, password, meta) {
       daily_overtime_after_minutes: 480, max_shift_minutes: 960,
       track_night: true, night_start_minutes: 1320, night_end_minutes: 360, track_holiday: true,
       patron_month_day: null, patron_name: null, work_saturday: false,
+      reminder_enabled: true, reminder_minutes: 1200,
     });
   }
   return user;
@@ -127,6 +129,22 @@ function rest(req, res, url, body, user) {
   const admin = (req.headers.authorization ?? "") === `Bearer ${SERVICE_KEY}`;
   const mine = (cid) => admin || members.some((m) => m.company_id === cid && m.user_id === user?.id);
 
+  if (table === "reminder_log") {
+    if (!admin) return json(res, 403, { code: "42501", message: "permission denied" });
+    const match = (r) => [...url.searchParams.entries()].filter(([k]) => !["select", "limit"].includes(k)).every(([k, v]) => !v.startsWith("eq.") || String(r[k]) === v.slice(3));
+    if (req.method === "POST") {
+      const it = JSON.parse(body.toString());
+      if (reminderLog.some((r) => r.company_id === it.company_id && r.local_date === it.local_date)) return json(res, 409, { code: "23505", message: "duplicate key" });
+      reminderLog.push({ ...it, sent_at: new Date().toISOString() });
+      return json(res, 201);
+    }
+    if (req.method === "DELETE") { for (const r of reminderLog.filter(match)) reminderLog.splice(reminderLog.indexOf(r), 1); return json(res, 204); }
+    return reply(reminderLog.filter(match));
+  }
+  if (table === "company_members" && req.method === "GET" && admin) {
+    const rows = members.filter((m) => m.company_id === eq(url, "company_id") && (!eq(url, "role") || m.role === eq(url, "role")));
+    return reply(rows.slice(0, 1).map((m) => ({ user_id: m.user_id })));
+  }
   if (table === "company_members" && req.method === "GET") {
     const rows = members.filter((m) => m.user_id === eq(url, "user_id") && m.user_id === user?.id)
       .map((m) => ({ role: m.role, companies: companies.get(m.company_id) }));
@@ -416,7 +434,7 @@ http.createServer(async (req, res) => {
   const user = userFromReq(req);
   const p = url.pathname;
 
-  if (p === "/__reset") { users.clear(); tokens.clear(); companies.clear(); members.length = 0; settings.clear(); files.clear(); employees.length = 0; pins.clear(); devices.length = 0; punches.length = 0; pinFails.clear(); leaves.length = 0; closures.length = 0; reportFiles.clear(); customRequests.length = 0; return json(res, 200, {}); }
+  if (p === "/__reset") { users.clear(); tokens.clear(); companies.clear(); members.length = 0; settings.clear(); files.clear(); employees.length = 0; pins.clear(); devices.length = 0; punches.length = 0; pinFails.clear(); leaves.length = 0; closures.length = 0; reportFiles.clear(); customRequests.length = 0; reminderLog.length = 0; return json(res, 200, {}); }
   if (p === "/__punches" && req.method === "POST") { // solo test/demo: inserisce timbrature grezze
     for (const it of JSON.parse(body.toString())) {
       const e = employees.find((x) => x.id === it.employee_id);
@@ -442,7 +460,7 @@ http.createServer(async (req, res) => {
     for (const x of punches) x.punched_at = new Date(new Date(x.punched_at).getTime() - min * 60000).toISOString();
     return json(res, 200, {});
   }
-  if (p === "/__state") return json(res, 200, { companies: [...companies.values()], settings: [...settings.values()], files: [...files.keys()], employees, pins: Object.fromEntries(pins), devices, punches, leaves, closures, reportFiles: [...reportFiles.keys()], customRequests });
+  if (p === "/__state") return json(res, 200, { companies: [...companies.values()], settings: [...settings.values()], files: [...files.keys()], employees, pins: Object.fromEntries(pins), devices, punches, leaves, closures, reportFiles: [...reportFiles.keys()], customRequests, reminderLog });
 
   if (p === "/auth/v1/signup") {
     const { email, password, data } = JSON.parse(body.toString());
@@ -457,6 +475,11 @@ http.createServer(async (req, res) => {
   }
   if (p === "/auth/v1/user") return user ? json(res, 200, publicUser(user)) : json(res, 401, { code: 401, error_code: "no_authorization", msg: "no user" });
   if (p === "/auth/v1/logout") return json(res, 204);
+  if (p.startsWith("/auth/v1/admin/users/") && req.method === "GET") {
+    if ((req.headers.authorization ?? "") !== `Bearer ${SERVICE_KEY}`) return json(res, 401, { msg: "not admin" });
+    const u = [...users.values()].find((x) => x.id === p.split("/").pop());
+    return u ? json(res, 200, publicUser(u)) : json(res, 404, { msg: "User not found" });
+  }
   if (p.startsWith("/rest/v1/")) return rest(req, res, url, body, user);
   if (p.startsWith("/storage/v1/")) return storage(req, res, url, body);
   json(res, 404, { message: `fake: ${p}` });

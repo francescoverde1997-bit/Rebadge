@@ -2,16 +2,16 @@ import type { Metadata } from "next";
 import { requireOwner, type CompanySettings } from "@/lib/company";
 import { createClient } from "@/lib/supabase/server";
 import { DEFAULT_SETTINGS } from "@/lib/hours/calculate";
-import { CompanyNameForm, HoursRulesForm, LogoForm } from "./forms";
+import { CompanyNameForm, HoursRulesForm, LogoForm, ReminderForm } from "./forms";
 
 export const metadata: Metadata = { title: "Impostazioni · ReBadge" };
 
 export default async function SettingsPage() {
-  const { company, logoUrl } = await requireOwner();
+  const { company, logoUrl, user } = await requireOwner();
   const supabase = await createClient();
   const { data } = await supabase
     .from("company_settings")
-    .select("rounding_minutes, auto_break_minutes, auto_break_after_minutes, daily_overtime_after_minutes, max_shift_minutes, track_night, night_start_minutes, night_end_minutes, track_holiday, patron_month_day, patron_name, work_saturday")
+    .select("rounding_minutes, auto_break_minutes, auto_break_after_minutes, daily_overtime_after_minutes, max_shift_minutes, track_night, night_start_minutes, night_end_minutes, track_holiday, patron_month_day, patron_name, work_saturday, reminder_enabled, reminder_minutes")
     .eq("company_id", company.id)
     .maybeSingle();
 
@@ -40,6 +40,10 @@ export default async function SettingsPage() {
 
       <Section id="logo" title="Logo" text="PNG, JPG, WebP o SVG fino a 2 MB. Compare nella dashboard e nell'intestazione dei report.">
         <LogoForm logoUrl={logoUrl} />
+      </Section>
+
+      <Section id="promemoria" title="Promemoria serale" text="Un'email la sera se qualcuno ha dimenticato di timbrare l'uscita: si sistema subito, quando l'orario è ancora fresco.">
+        <ReminderForm enabled={data?.reminder_enabled ?? true} minutes={data?.reminder_minutes ?? 1200} email={user.email ?? "il tuo indirizzo"} />
       </Section>
 
       <Section id="regole" title="Regole di calcolo delle ore" text="Valgono per tutti i dipendenti. I valori iniziali vanno bene per la maggior parte delle aziende.">

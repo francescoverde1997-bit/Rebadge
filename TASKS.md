@@ -187,6 +187,14 @@ Legenda: [x] fatto e testato · [ ] da fare · (!) richiede decisione del fondat
 - [x] Intestazione pubblica su telefoni stretti (320–379 px): solo il simbolo, "Prova gratis" resta nello schermo; controllo e2e in fase 12
 - [x] git attivo: primo commit `35b2790` del 25/10 (ramo main)
 
+## Promemoria serale al titolare ✅ (sviluppato il 27/10, si accende con D7)
+- [x] Email la sera solo se qualcuno è ancora al lavoro o c'è una timbratura da sistemare (ripetuta ogni sera finché resta); link al giorno da correggere
+- [x] Impostazioni → Promemoria serale: attivo/disattivo, orario 18:00–23:30 (predefinito 20:00); l'email va al titolare
+- [x] Database: migrazione 14 (impostazioni + registro invii, una email al giorno), applicata anche al Supabase reale; tipi rigenerati
+- [x] Servizio /api/cron/promemoria protetto da CRON_SECRET; invio con Resend; se l'invio fallisce si riprova al giro dopo
+- [x] Test: 7 unit test, test DB 96_reminder, fase e2e 13 con finto servizio email (8 controlli)
+- [ ] Accensione (in D7): chiave Resend, EMAIL_FROM e CRON_SECRET su Vercel; orologio Vercel Cron ogni ora (piano Pro) o una volta al giorno (Hobby)
+
 ## Fase 8 — Lancio
 Piano dettagliato, costi e ordine dei passi: [docs/FASE_D.md](docs/FASE_D.md) (approvato il 25/10).
 - [x] D1 GitHub: repository privato `francescoverde1997-bit/Rebadge`, ramo main caricato; accesso dal Mac con chiave dedicata al solo repository (deploy key, `~/.ssh/rebadge_github`, alias `github-rebadge`)

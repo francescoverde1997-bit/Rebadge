@@ -135,6 +135,8 @@ export type Database = {
           night_start_minutes: number
           patron_month_day: string | null
           patron_name: string | null
+          reminder_enabled: boolean
+          reminder_minutes: number
           rounding_minutes: number
           track_holiday: boolean
           track_night: boolean
@@ -151,6 +153,8 @@ export type Database = {
           night_start_minutes?: number
           patron_month_day?: string | null
           patron_name?: string | null
+          reminder_enabled?: boolean
+          reminder_minutes?: number
           rounding_minutes?: number
           track_holiday?: boolean
           track_night?: boolean
@@ -167,6 +171,8 @@ export type Database = {
           night_start_minutes?: number
           patron_month_day?: string | null
           patron_name?: string | null
+          reminder_enabled?: boolean
+          reminder_minutes?: number
           rounding_minutes?: number
           track_holiday?: boolean
           track_night?: boolean
@@ -520,6 +526,32 @@ export type Database = {
             columns: ["employee_id"]
             isOneToOne: false
             referencedRelation: "employees"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      reminder_log: {
+        Row: {
+          company_id: string
+          local_date: string
+          sent_at: string
+        }
+        Insert: {
+          company_id: string
+          local_date: string
+          sent_at?: string
+        }
+        Update: {
+          company_id?: string
+          local_date?: string
+          sent_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "reminder_log_company_id_fkey"
+            columns: ["company_id"]
+            isOneToOne: false
+            referencedRelation: "companies"
             referencedColumns: ["id"]
           },
         ]
